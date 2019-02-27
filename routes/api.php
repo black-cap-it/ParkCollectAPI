@@ -25,27 +25,46 @@ Route::middleware('auth:api')->post('/user', function (Request $request) {
 
 Route::post('register', 'registerApi@index');
 
-Route::post('parking', 'parkingApi@index');
 
-Route::post('complaints', 'complaintsApi@index');
+Route::group(['middleware' => ['api']], function () {
+    // parking
+    Route::post('parking', 'parkingApi@index');
+    Route::get('parking-view/{id}', 'parkingApi@view');
+    Route::post('parking/edit/{id}', 'parkingApi@edit');
+    Route::get('parking/delete/{id}', 'parkingApi@delete');
+
+    // complaints
+    Route::post('complaints', 'complaintsApi@index');
+    Route::get('complaints-view/{id}', 'complaintsApi@view');
+    Route::post('complaints/edit/{id}', 'complaintsApi@edit');
+    Route::get('complaints/delete/{id}', 'complaintsApi@delete');
+});
+
+
+Route::group(['middleware' => ['api']], function () {
+    Route::get('logout', 'apiLogout@logout');
+});
 
 Route::post('login', function (Request $request) {
 
-    // if (auth()->attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
-    //     // Authentication passed...
-    //     $user = auth()->user();
-    //     // $user->remember_token = str_random(60);
-    //     $user->save();
-    //     return $user;
-    // }
-
-
     if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
         $user = auth()->user();
+
+        $email['email'] =  $user->email;
+
+        $Token = User::where(['email' => $email])->first();
+        $tokenGenerate = Str::random(60);
+        $Token->remember_token = $tokenGenerate;
+        $Token->save();
+
+        $dara = auth()->user();
+
+       
+     
         $success['remember_token'] =  $user->remember_token;
         $output = User::where(['remember_token' => $user->remember_token])->first();
         // return response()->json(['success' => $success]);
-        return response()->json([$output]);
+        return response()->json([$email]);
     }
 
     return response()->json([

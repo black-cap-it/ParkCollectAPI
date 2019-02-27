@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.4
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2019 at 07:38 AM
--- Server version: 10.1.37-MariaDB
--- PHP Version: 7.3.0
+-- Generation Time: Feb 27, 2019 at 12:58 PM
+-- Server version: 10.1.36-MariaDB
+-- PHP Version: 7.0.32
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -42,6 +42,17 @@ CREATE TABLE `complaints` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `complaints`
+--
+
+INSERT INTO `complaints` (`id`, `userid`, `xcord`, `ycord`, `zeitpunkt`, `parkplatz`, `grund`, `tarif`, `telefon`, `image`, `created_at`, `updated_at`) VALUES
+(1, '112', 'wefwefwef', 'qwdqwdqw', 'refgwref', 'dwqd', 'wefwef', 'weff', 'wefwf', 'parking_images/20190227_523561/34V542738954748.jpg', '2019-02-27 04:23:11', '2019-02-27 04:23:11'),
+(3, '112', 'wefwefwef', 'qwdqwdqw', 'refgwref', 'dwqd', 'wefwef', 'weff', 'wefwf', 'parking_images/20190227_266923/0398420699701D6.jpg', '2019-02-27 04:23:44', '2019-02-27 04:23:44'),
+(4, '112', 'wefwefwef', 'qwdqwdqw', 'refgwref', 'dwqd', 'wefwef', 'weff', 'wefwf', 'parking_images/20190227_670043/48403537046983U.jpg', '2019-02-27 04:23:46', '2019-02-27 04:23:46'),
+(5, '112', 'wefwefwef', 'qwdqwdqw', 'refgwref', 'dwqd', 'wefwef', 'weff dara', 'wefwf', 'parking_images/20190227_209913/K27486072960731.jpg', '2019-02-27 04:27:24', '2019-02-27 04:27:24'),
+(6, '112', 'wefwefwef dara', 'qwdqwdqw', 'refgwref', 'dwqd', 'wefwef', 'weff dara', 'wefwf', 'parking_images/20190227_924439/7361135987V8150.jpg', '2019-02-27 04:27:39', '2019-02-27 04:27:39');
 
 -- --------------------------------------------------------
 
@@ -86,6 +97,14 @@ CREATE TABLE `parking` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `parking`
+--
+
+INSERT INTO `parking` (`id`, `userid`, `xcord`, `ycord`, `parkplatz`, `strab`, `haus`, `plz`, `ort`, `image`, `image_enc`, `created_at`, `updated_at`) VALUES
+(1, '112', 'qddqwd', 'qwdqwdqw', 'dwqd', 'dwqd', 'wqdq', 'qwdqd', 'qwdqw', 'parking_images/20190227_392106/974777769U97690.jpg', NULL, '2019-02-27 02:31:59', '2019-02-27 02:31:59'),
+(3, '112', 'qddqwd', 'qwdqwdqw', 'dwqd', 'dwqd', 'wqdq', 'qwdqd', 'qwdqw', 'parking_images/20190227_383331/754459W23554630.jpg', NULL, '2019-02-27 02:32:41', '2019-02-27 02:32:41');
 
 -- --------------------------------------------------------
 
@@ -132,7 +151,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `image`, `nutzung`, `anrede`, `firma`, `vorname`, `nachname`, `strabe`, `haus`, `plz`, `ort`, `telefon`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'dara', 'superadmin@parking.com', NULL, '$2y$10$aBZqxZjAKQXNgPXJuEZ0Huk2ELwGFHLDYcyDP/5I82p8FEVc4oASa', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'e0vIkvmEtmxeWWW9TdLFG343JjGFXAwdJleSVSeIL1B3w2QQkGuabrPMgOa4', '2019-02-26 23:33:32', '2019-02-26 23:33:32');
+(1, 'dara', 'superadmin@parking.com', NULL, '$2y$10$aBZqxZjAKQXNgPXJuEZ0Huk2ELwGFHLDYcyDP/5I82p8FEVc4oASa', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'pjssGzwAcDlkLirAOx4sGU7YxyQFzBiLHR9eiKzYCh7Zy6ydG1tHs2B04QFV', '2019-02-26 23:33:32', '2019-02-27 03:02:17'),
+(2, 'dara', 'dara@gmail.com', NULL, '$2y$10$co9KgEBuzz8hEbUE5UB0UujLcBPC8iI4bZoVGCjaRPFP2JC03Pz1y', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'rQoRZrtHzuWlUt0EhPhUnluZAMpvTwSOWWlYYu1LjwMhmuOg7YBV3OD8qceD', '2019-02-27 03:01:15', '2019-02-27 06:08:14');
 
 --
 -- Indexes for dumped tables
@@ -177,7 +197,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `complaints`
 --
 ALTER TABLE `complaints`
-  MODIFY `id` bigint(100) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(100) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -189,13 +209,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `parking`
 --
 ALTER TABLE `parking`
-  MODIFY `id` bigint(100) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(100) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
