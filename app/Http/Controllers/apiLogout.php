@@ -14,7 +14,7 @@ class apiLogout extends Controller
             'remember_token' => 'required'
             ]);
             if ($validator->fails()) {
-                return response()->json(['remember_token'=>'The remember token field is required']);
+                return response()->json(['data' => ['remember_token'=>'The remember token field is required']]);
             } else {
                 $token = request('remember_token');
                 $outputUser = User::where(['remember_token' => $token])->first();
