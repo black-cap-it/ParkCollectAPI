@@ -1,96 +1,26 @@
 <?php
-
-use Illuminate\Http\Request;
-use App\User;
-use Illuminate\Support\Str;
-
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Authorization");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-
-Route::middleware('auth:api')->post('/user', function (Request $request) {
-    return $request->user();
-});
-
+// Login
+Route::post('login', 'apiLogin@login');
+// register
 Route::post('register', 'registerApi@index');
-
-
-Route::group(['middleware' => ['api']], function () {
-    // parking
-    Route::post('parking', 'parkingApi@index');
-    Route::get('parking-view/{id}', 'parkingApi@view');
-    Route::post('parking/edit/{id}', 'parkingApi@edit');
-    Route::get('parking/delete/{id}', 'parkingApi@delete');
-
-    // complaints
-    Route::post('complaints', 'complaintsApi@index');
-    Route::get('complaints-view/{id}', 'complaintsApi@view');
-    Route::post('complaints/edit/{id}', 'complaintsApi@edit');
-    Route::get('complaints/delete/{id}', 'complaintsApi@delete');
-});
-
-
-Route::group(['middleware' => ['api']], function () {
-    Route::get('logout', 'apiLogout@logout');
-});
-
-Route::post('login', function (Request $request) {
-
-    if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
-        $user = auth()->user();
-        $email['email'] =  $user->email;
-        $Token = User::where(['email' => $email])->first();
-        $tokenGenerate = Str::random(60);
-        $Token->remember_token = $tokenGenerate;
-        $Token->save();
-        $success['remember_token'] =  $user->remember_token;
-        return response()->json($tokenGenerate);
-    }
-    return response()->json([
-        'error' => 'Unauthenticated User',
-        'code' => 401,
-    ], 401);
-});
-
-Route::post('profile', function (Request $request) {
-    $token = request('remember_token');
-    $output = User::where(['remember_token' => $token])->first();
-    if ($output != null) {
-        return response()->json($output->toArray());
-    } else {
-        $success['error'] =  'data not found';
-        return response()->json($success);
-    }
-});
-
-Route::post('profile-update', function (Request $request) {
-    $token = request('remember_token');
-
-    $nutzung = request('nutzung');
-    $anrede = request('anrede');
-    $firma = request('firma');
-    $vorname = request('vorname');
-    $nachname = request('nachname');
-    $strabe = request('strabe');
-    $haus = request('haus');
-    $plz = request('plz');
-    $ort = request('ort');
-    $telefon = request('telefon');
-
-
-    $profile = User::where(['remember_token' => $token])->first();
-    $profile->nutzung = $nutzung;
-    $profile->anrede = $anrede;
-    $profile->firma = $firma;
-    $profile->vorname = $vorname;
-    $profile->nachname = $nachname;
-    $profile->strabe = $strabe;
-    $profile->haus = $haus;
-    $profile->plz = $plz;
-    $profile->ort = $ort;
-    $profile->telefon = $telefon;
-    $profile->save();
-
-    $output = User::all();
-    return response()->json($output->toArray());
-});
+// parking
+Route::post('parking', 'parkingApi@index');
+Route::post('parking/view', 'parkingApi@viewAll');
+Route::post('parking/view/{id}', 'parkingApi@view');
+Route::post('parking/edit/{id}', 'parkingApi@edit');
+Route::post('parking/delete/{id}', 'parkingApi@delete');
+// complaints
+Route::post('complaints', 'complaintsApi@index');
+Route::post('complaints/view', 'complaintsApi@viewAll');
+Route::post('complaints/view/{id}', 'complaintsApi@view');
+Route::post('complaints/edit/{id}', 'complaintsApi@edit');
+Route::post('complaints/delete/{id}', 'complaintsApi@delete');
+// logout
+Route::post('logout', 'apiLogout@logout');
+// profile
+Route::post('profile', 'apiProfile@profile');
+// profile update
+Route::post('profile/edit','apiProfile@profileUpdate' );

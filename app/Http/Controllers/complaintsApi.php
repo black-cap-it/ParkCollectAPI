@@ -8,7 +8,6 @@ use App\complaints;
 use Validator;
 use File;
 use Image;
-use Auth;
 
 class complaintsApi extends Controller
 {
@@ -24,92 +23,22 @@ class complaintsApi extends Controller
             'tarif' => 'required',
             'telefon' => 'required',
             'image' => 'required',
+            'remember_token' => 'required'
         ]);
     
         if ($validator->fails()) {
-            return response()->json($validator->messages(), 200);
+            return response()->json(['data' => $validator->messages()], 200);
         } else {
-            $file = $request->file('image');
-            $folder_name = date('Ymd') . '_' . mt_rand(1000, 990000);
-            File::makeDirectory(public_path() . '/parking_images/' . $folder_name, 0777, true);
-            $destinationPath = ('parking_images/' . $folder_name);
-            $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $token = request('remember_token');
+            $output = User::where(['remember_token' => $token])->first();
+            // Token check
+            if ($output != null) {
+                $emailget = $output['email'];
 
-            $pin = mt_rand(1000000, 9999999)
-                    . mt_rand(1000000, 9999999)
-                        . $characters[rand(0, strlen($characters) - 1)];
-
-            $string = str_shuffle($pin);
-            $imagename = $string . '.' . $file->getClientOriginalExtension();
-            $thumb_img = Image::make($file->getRealPath());
-            $thumb_img->save($destinationPath . '/' . $imagename, 100);
-            
-            $xcord = $request->input('xcord');
-            $ycord = $request->input('ycord');
-            $zeitpunkt = $request->input('zeitpunkt');
-            $parkplatz = $request->input('parkplatz');
-            $grund = $request->input('grund');
-            $tarif = $request->input('tarif');
-            $telefon = $request->input('telefon');
-            $image = $destinationPath.'/'.$imagename;
-           
-            $parking = new complaints;
-            $parking->userid = '112';
-            $parking->xcord = $xcord;
-            $parking->ycord = $ycord;
-            $parking->zeitpunkt = $zeitpunkt;
-            $parking->parkplatz = $parkplatz;
-            $parking->grund = $grund;
-            $parking->tarif = $tarif;
-            $parking->telefon = $telefon;
-            $parking->image = $destinationPath.'/'.$imagename;
-            $parking->save();
-            
-            return response()->json([
-                'xcord' => $xcord ,
-                'ycord' => $ycord,
-                'zeitpunkt' => $zeitpunkt,
-                'parkplatz' => $parkplatz,
-                'grund' => $grund,
-                'tarif' => $tarif,
-                'telefon' => $telefon,
-                'image' => $image,
-                'response' => '1'
-         ]);
-        }
-    }
-    public function view($id)
-    {
-        $output = complaints::where(['id' => $id])->first();
-        if ($output != null) {
-            return response()->json($output->toArray());
-        }
-        else{
-            return response()->json(['error'=>'data not found']);
-        }
-    }
-    public function edit(request $request,$id)
-    {
-        $validator = Validator::make($request->all(), [
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1048',
-            'xcord' => 'required',
-            'ycord' => 'required',
-            'zeitpunkt' => 'required',
-            'parkplatz' => 'required',
-            'grund' => 'required',
-            'tarif' => 'required',
-            'telefon' => 'required',
-            'image' => 'required',
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json($validator->messages(), 200);
-        } else {
-            if ($request->has('image')) {
                 $file = $request->file('image');
                 $folder_name = date('Ymd') . '_' . mt_rand(1000, 990000);
-                File::makeDirectory(public_path() . '/parking_images/' . $folder_name, 0777, true);
-                $destinationPath = ('parking_images/' . $folder_name);
+                File::makeDirectory(public_path() . '/complaints_images/' . $folder_name, 0777, true);
+                $destinationPath = ('complaints_images/' . $folder_name);
                 $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
                 $pin = mt_rand(1000000, 9999999)
@@ -130,19 +59,20 @@ class complaintsApi extends Controller
                 $telefon = $request->input('telefon');
                 $image = $destinationPath.'/'.$imagename;
            
-                $parking = complaints::where(['id' => $id])->first();
-                $parking->userid = '112';
-                $parking->xcord = $xcord;
-                $parking->ycord = $ycord;
-                $parking->zeitpunkt = $zeitpunkt;
-                $parking->parkplatz = $parkplatz;
-                $parking->grund = $grund;
-                $parking->tarif = $tarif;
-                $parking->telefon = $telefon;
-                $parking->image = $destinationPath.'/'.$imagename;
-                $parking->save();
+                $complaints = new complaints;
+                $complaints->userid = $emailget;
+                $complaints->xcord = $xcord;
+                $complaints->ycord = $ycord;
+                $complaints->zeitpunkt = $zeitpunkt;
+                $complaints->parkplatz = $parkplatz;
+                $complaints->grund = $grund;
+                $complaints->tarif = $tarif;
+                $complaints->telefon = $telefon;
+                $complaints->image = $destinationPath.'/'.$imagename;
+                $complaints->save();
             
-                return response()->json([
+                return response()->json(['data' => [
+                'userid' => $emailget,
                 'xcord' => $xcord ,
                 'ycord' => $ycord,
                 'zeitpunkt' => $zeitpunkt,
@@ -152,31 +82,163 @@ class complaintsApi extends Controller
                 'telefon' => $telefon,
                 'image' => $image,
                 'response' => '1'
-         ]);
+         ]]);
+            } else {
+                $success['error'] =  'Token not Valid';
+                return response()->json(['data' => $success]);
             }
-            else{
-                
+            // token end
+        }
+    }
+    public function viewAll(request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'remember_token' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['data' => $validator->messages()], 200);
+        } else {
+            $token = request('remember_token');
+            $outputUser = User::where(['remember_token' => $token])->first();
+            // Token check
+            if ($outputUser != null) {
+                $emailget = $outputUser['email'];
+                $output = complaints::where(['userid' => $emailget])->get();
+                if ($output != null) {
+                    return response()->json(['data' => $output]);
+                } else {
+                    return response()->json(['data' => ['error'=>'data not found']]);
+                }
+            } else {
+                $success['error'] =  'Token not Valid';
+                return response()->json(['data' => $success]);
+            }
+            // token end
+        }
+    }
+    public function view(request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'remember_token' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['data' => $validator->messages()], 200);
+        } else {
+            $token = request('remember_token');
+            $outputUser = User::where(['remember_token' => $token])->first();
+            // Token check
+            if ($outputUser != null) {
+                $output = complaints::where(['id' => $id])->first();
+                if ($output != null) {
+                    return response()->json(['data' => $output]);
+                } else {
+                    return response()->json(['data' => ['error'=>'data not found']]);
+                }
+            } else {
+                $success['error'] =  'Token not Valid';
+                return response()->json(['data' => $success]);
+            }
+            // token end
+        }
+    }
+    public function edit(request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1048',
+            'xcord' => 'required',
+            'ycord' => 'required',
+            'zeitpunkt' => 'required',
+            'parkplatz' => 'required',
+            'grund' => 'required',
+            'tarif' => 'required',
+            'telefon' => 'required',
+            'image' => 'required',
+            'remember_token' => 'required'
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['data' => $validator->messages()], 200);
+        } else {
+            $token = request('remember_token');
+            $outputUser = User::where(['remember_token' => $token])->first();
+            // Token check
+            if ($outputUser != null) {
+                $output = complaints::where(['id' => $id])->first();
+
+                //complaints data check
+                if ($output != null) {
+                    $emailget = $outputUser['email'];
+                    if ($request->has('image')) {
+                        $file = $request->file('image');
+                        $folder_name = date('Ymd') . '_' . mt_rand(1000, 990000);
+                        File::makeDirectory(public_path() . '/complaints_images/' . $folder_name, 0777, true);
+                        $destinationPath = ('complaints_images/' . $folder_name);
+                        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+                        $pin = mt_rand(1000000, 9999999)
+                    . mt_rand(1000000, 9999999)
+                        . $characters[rand(0, strlen($characters) - 1)];
+
+                        $string = str_shuffle($pin);
+                        $imagename = $string . '.' . $file->getClientOriginalExtension();
+                        $thumb_img = Image::make($file->getRealPath());
+                        $thumb_img->save($destinationPath . '/' . $imagename, 100);
             
-                $xcord = $request->input('xcord');
-                $ycord = $request->input('ycord');
-                $zeitpunkt = $request->input('zeitpunkt');
-                $parkplatz = $request->input('parkplatz');
-                $grund = $request->input('grund');
-                $tarif = $request->input('tarif');
-                $telefon = $request->input('telefon');
+                        $xcord = $request->input('xcord');
+                        $ycord = $request->input('ycord');
+                        $zeitpunkt = $request->input('zeitpunkt');
+                        $parkplatz = $request->input('parkplatz');
+                        $grund = $request->input('grund');
+                        $tarif = $request->input('tarif');
+                        $telefon = $request->input('telefon');
+                        $image = $destinationPath.'/'.$imagename;
+           
+                        $complaints = complaints::where(['id' => $id])->first();
+                        $complaints->userid = $emailget;
+                        $complaints->xcord = $xcord;
+                        $complaints->ycord = $ycord;
+                        $complaints->zeitpunkt = $zeitpunkt;
+                        $complaints->parkplatz = $parkplatz;
+                        $complaints->grund = $grund;
+                        $complaints->tarif = $tarif;
+                        $complaints->telefon = $telefon;
+                        $complaints->image = $destinationPath.'/'.$imagename;
+                        $complaints->save();
+            
+                        return response()->json(['data' => [
+                            'userid' => $emailget,
+                'xcord' => $xcord ,
+                'ycord' => $ycord,
+                'zeitpunkt' => $zeitpunkt,
+                'parkplatz' => $parkplatz,
+                'grund' => $grund,
+                'tarif' => $tarif,
+                'telefon' => $telefon,
+                'image' => $image,
+                'response' => '1'
+         ]]);
+                    } else {
+                        $xcord = $request->input('xcord');
+                        $ycord = $request->input('ycord');
+                        $zeitpunkt = $request->input('zeitpunkt');
+                        $parkplatz = $request->input('parkplatz');
+                        $grund = $request->input('grund');
+                        $tarif = $request->input('tarif');
+                        $telefon = $request->input('telefon');
                
-                $parking = complaints::where(['id' => $id])->first();
-                $parking->userid = '112';
-                $parking->xcord = $xcord;
-                $parking->ycord = $ycord;
-                $parking->zeitpunkt = $zeitpunkt;
-                $parking->parkplatz = $parkplatz;
-                $parking->grund = $grund;
-                $parking->tarif = $tarif;
-                $parking->telefon = $telefon;
-                $parking->save();
+                        $complaints = complaints::where(['id' => $id])->first();
+                        $complaints->userid = $emailget;
+                        $complaints->xcord = $xcord;
+                        $complaints->ycord = $ycord;
+                        $complaints->zeitpunkt = $zeitpunkt;
+                        $complaints->parkplatz = $parkplatz;
+                        $complaints->grund = $grund;
+                        $complaints->tarif = $tarif;
+                        $complaints->telefon = $telefon;
+                        $complaints->save();
             
-                return response()->json([
+                        return response()->json(['data' => [
+                            'userid' => $emailget,
                 'xcord' => $xcord ,
                 'ycord' => $ycord,
                 'zeitpunkt' => $zeitpunkt,
@@ -185,21 +247,45 @@ class complaintsApi extends Controller
                 'tarif' => $tarif,
                 'telefon' => $telefon,
                 'response' => '1'
-         ]);
+         ]]);
+                    }
+                } else {
+                    return response()->json(['data' => ['error'=>'Data not found']]);
+                }
+                // complaints end
+            } else {
+                $success['error'] =  'Token not Valid';
+                return response()->json(['data' => $success]);
             }
+            // token end
         }
     }
-    public function delete($id) {
-        
-        $output = complaints::where(['id' => $id])->first();
-
-        if ($output != null) {
-            $output->delete();
-            return response()->json(['responce'=>'Data Deleted Successfully']);
+    public function delete(request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'remember_token' => 'required'
+            ]);
+        if ($validator->fails()) {
+            return response()->json(['data' => $validator->messages()], 200);
+        } else {
+            $token = request('remember_token');
+            $outputUser = User::where(['remember_token' => $token])->first();
+            // Token check
+            if ($outputUser != null) {
+                $output = complaints::where(['id' => $id])->first();
+                //complaints data check
+                if ($output != null) {
+                    $output->delete();
+                    return response()->json(['data' => ['responce'=>'Data Deleted Successfully']]);
+                } else {
+                    return response()->json(['data' => ['error'=>'Data not found']]);
+                }
+                //complaints end
+            } else {
+                $success['error'] =  'Token not Valid';
+                return response()->json(['data' => $success]);
+            }
+            // token end
         }
-        else{
-            return response()->json(['error'=>'Data not found']);
-        }
-
-	}
+    }
 }
