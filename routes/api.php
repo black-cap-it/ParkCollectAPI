@@ -4,16 +4,6 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Str;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Authorization");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
@@ -21,7 +11,6 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 Route::middleware('auth:api')->post('/user', function (Request $request) {
     return $request->user();
 });
-// Route::post('/login', 'apiController@index');
 
 Route::post('register', 'registerApi@index');
 
@@ -55,7 +44,7 @@ Route::post('login', function (Request $request) {
         $Token->remember_token = $tokenGenerate;
         $Token->save();
         $success['remember_token'] =  $user->remember_token;
-        return response()->json($success);
+        return response()->json($tokenGenerate);
     }
     return response()->json([
         'error' => 'Unauthenticated User',
@@ -69,7 +58,8 @@ Route::post('profile', function (Request $request) {
     if ($output != null) {
         return response()->json($output->toArray());
     } else {
-        return response()->json(['error'=>'data not found']);
+        $success['error'] =  'data not found';
+        return response()->json($success);
     }
 });
 
