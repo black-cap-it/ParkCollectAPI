@@ -49,26 +49,16 @@ Route::post('login', function (Request $request) {
 
     if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
         $user = auth()->user();
-
         $email['email'] =  $user->email;
-
         $Token = User::where(['email' => $email])->first();
         $tokenGenerate = Str::random(60);
         $Token->remember_token = $tokenGenerate;
         $Token->save();
-
-        $dara = auth()->user();
-
-       
-     
         $success['remember_token'] =  $user->remember_token;
-        $output = User::where(['remember_token' => $user->remember_token])->first();
-        // return response()->json(['success' => $success]);
-        return response()->json([$email]);
+        return response()->json($success);
     }
-
     return response()->json([
-        'error' => 'Unauthenticated user',
+        'error' => 'Unauthenticated User',
         'code' => 401,
     ], 401);
 });
