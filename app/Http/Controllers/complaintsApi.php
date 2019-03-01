@@ -14,7 +14,7 @@ class complaintsApi extends Controller
     public function index(request $request)
     {
         $validator = Validator::make($request->all(), [
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1048',
+            'image' => 'required',
             'xcord' => 'required',
             'ycord' => 'required',
             'zeitpunkt' => 'required',
@@ -22,7 +22,6 @@ class complaintsApi extends Controller
             'grund' => 'required',
             'tarif' => 'required',
             'telefon' => 'required',
-            'image' => 'required',
             'remember_token' => 'required'
         ]);
     
@@ -35,7 +34,7 @@ class complaintsApi extends Controller
             if ($output != null) {
                 $emailget = $output['email'];
 
-                $file = $request->file('image');
+                // $file = $request->file('image');
                 $folder_name = date('Ymd') . '_' . mt_rand(1000, 990000);
                 File::makeDirectory(public_path() . '/complaints_images/' . $folder_name, 0777, true);
                 $destinationPath = ('complaints_images/' . $folder_name);
@@ -46,9 +45,9 @@ class complaintsApi extends Controller
                         . $characters[rand(0, strlen($characters) - 1)];
 
                 $string = str_shuffle($pin);
-                $imagename = $string . '.' . $file->getClientOriginalExtension();
-                $thumb_img = Image::make($file->getRealPath());
-                $thumb_img->save($destinationPath . '/' . $imagename, 100);
+                // $imagename = $string . '.' . $file->getClientOriginalExtension();
+                // $thumb_img = Image::make($file->getRealPath());
+                // $thumb_img->save($destinationPath . '/' . $imagename, 100);
             
                 $xcord = $request->input('xcord');
                 $ycord = $request->input('ycord');
@@ -57,7 +56,16 @@ class complaintsApi extends Controller
                 $grund = $request->input('grund');
                 $tarif = $request->input('tarif');
                 $telefon = $request->input('telefon');
-                $image = $destinationPath.'/'.$imagename;
+                // $image = $destinationPath.'/'.$imagename;
+
+                // Base 64 image Operation
+                $data = $request->input('image');
+                $data = str_replace('data:image/png;base64,', '', $data);
+                $data = str_replace(' ', '+', $data);
+                $string2 = $string .''. str_random(10).'.'.'png';
+                $pathImage = $destinationPath.'/'. $string2;
+                File::put(public_path(). '/'.$destinationPath .'/'. $string2, base64_decode($data));
+                // Base 64 End
            
                 $complaints = new complaints;
                 $complaints->userid = $emailget;
@@ -68,7 +76,7 @@ class complaintsApi extends Controller
                 $complaints->grund = $grund;
                 $complaints->tarif = $tarif;
                 $complaints->telefon = $telefon;
-                $complaints->image = $destinationPath.'/'.$imagename;
+                $complaints->image = $pathImage;
                 $complaints->save();
             
                 return response()->json(['data' => [
@@ -80,7 +88,7 @@ class complaintsApi extends Controller
                 'grund' => $grund,
                 'tarif' => $tarif,
                 'telefon' => $telefon,
-                'image' => $image,
+                'image' => $pathImage,
                 'response' => '1'
          ]]);
             } else {
@@ -144,7 +152,7 @@ class complaintsApi extends Controller
     public function edit(request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1048',
+            'image' => 'required',
             'xcord' => 'required',
             'ycord' => 'required',
             'zeitpunkt' => 'required',
@@ -152,7 +160,6 @@ class complaintsApi extends Controller
             'grund' => 'required',
             'tarif' => 'required',
             'telefon' => 'required',
-            'image' => 'required',
             'remember_token' => 'required'
         ]);
     
@@ -169,7 +176,7 @@ class complaintsApi extends Controller
                 if ($output != null) {
                     $emailget = $outputUser['email'];
                     if ($request->has('image')) {
-                        $file = $request->file('image');
+                        // $file = $request->file('image');
                         $folder_name = date('Ymd') . '_' . mt_rand(1000, 990000);
                         File::makeDirectory(public_path() . '/complaints_images/' . $folder_name, 0777, true);
                         $destinationPath = ('complaints_images/' . $folder_name);
@@ -180,9 +187,9 @@ class complaintsApi extends Controller
                         . $characters[rand(0, strlen($characters) - 1)];
 
                         $string = str_shuffle($pin);
-                        $imagename = $string . '.' . $file->getClientOriginalExtension();
-                        $thumb_img = Image::make($file->getRealPath());
-                        $thumb_img->save($destinationPath . '/' . $imagename, 100);
+                        // $imagename = $string . '.' . $file->getClientOriginalExtension();
+                        // $thumb_img = Image::make($file->getRealPath());
+                        // $thumb_img->save($destinationPath . '/' . $imagename, 100);
             
                         $xcord = $request->input('xcord');
                         $ycord = $request->input('ycord');
@@ -191,7 +198,16 @@ class complaintsApi extends Controller
                         $grund = $request->input('grund');
                         $tarif = $request->input('tarif');
                         $telefon = $request->input('telefon');
-                        $image = $destinationPath.'/'.$imagename;
+                        // $image = $destinationPath.'/'.$imagename;
+
+                        // Base 64 image Operation
+                        $data = $request->input('image');
+                        $data = str_replace('data:image/png;base64,', '', $data);
+                        $data = str_replace(' ', '+', $data);
+                        $string2 = $string .''. str_random(10).'.'.'png';
+                        $pathImage = $destinationPath.'/'. $string2;
+                        File::put(public_path(). '/'.$destinationPath .'/'. $string2, base64_decode($data));
+                        // Base 64 End
            
                         $complaints = complaints::where(['id' => $id])->first();
                         $complaints->userid = $emailget;
@@ -202,7 +218,7 @@ class complaintsApi extends Controller
                         $complaints->grund = $grund;
                         $complaints->tarif = $tarif;
                         $complaints->telefon = $telefon;
-                        $complaints->image = $destinationPath.'/'.$imagename;
+                        $complaints->image = $pathImage;
                         $complaints->save();
             
                         return response()->json(['data' => [
@@ -214,7 +230,7 @@ class complaintsApi extends Controller
                 'grund' => $grund,
                 'tarif' => $tarif,
                 'telefon' => $telefon,
-                'image' => $image,
+                'image' => $pathImage,
                 'response' => '1'
          ]]);
                     } else {

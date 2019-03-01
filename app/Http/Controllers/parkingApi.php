@@ -7,14 +7,13 @@ use App\User;
 use App\parking;
 use Validator;
 use File;
-use Image;
 
 class parkingApi extends Controller
 {
     public function index(request $request)
     {
         $validator = Validator::make($request->all(), [
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1048',
+            'image' => 'required',
             'xcord' => 'required',
             'ycord' => 'required',
             'parkplatz' => 'required',
@@ -22,7 +21,6 @@ class parkingApi extends Controller
             'haus' => 'required',
             'plz' => 'required',
             'ort' => 'required',
-            'image' => 'required',
             'remember_token' => 'required'
         ]);
     
@@ -35,7 +33,7 @@ class parkingApi extends Controller
             if ($output != null) {
                 $emailget = $output['email'];
 
-                $file = $request->file('image');
+                // $file = $request->file('image');
                 $folder_name = date('Ymd') . '_' . mt_rand(1000, 990000);
                 File::makeDirectory(public_path() . '/parking_images/' . $folder_name, 0777, true);
                 $destinationPath = ('parking_images/' . $folder_name);
@@ -46,9 +44,9 @@ class parkingApi extends Controller
                         . $characters[rand(0, strlen($characters) - 1)];
 
                 $string = str_shuffle($pin);
-                $imagename = $string . '.' . $file->getClientOriginalExtension();
-                $thumb_img = Image::make($file->getRealPath());
-                $thumb_img->save($destinationPath . '/' . $imagename, 100);
+                // $imagename = $string . '.' . $file->getClientOriginalExtension();
+                // $thumb_img = Image::make($file->getRealPath());
+                // $thumb_img->save($destinationPath . '/' . $imagename, 100);
             
                 $xcord = $request->input('xcord');
                 $ycord = $request->input('ycord');
@@ -57,7 +55,16 @@ class parkingApi extends Controller
                 $haus = $request->input('haus');
                 $plz = $request->input('plz');
                 $ort = $request->input('ort');
-                $image = $destinationPath.'/'.$imagename;
+                // $image = $destinationPath.'/'.$imagename;
+
+                // Base 64 image Operation
+                $data = $request->input('image');
+                $data = str_replace('data:image/png;base64,', '', $data);
+                $data = str_replace(' ', '+', $data);
+                $string2 = $string .''. str_random(10).'.'.'png';
+                $pathImage = $destinationPath.'/'. $string2;
+                File::put(public_path(). '/'.$destinationPath .'/'. $string2, base64_decode($data));
+                // Base 64 End
            
                 $parking = new parking;
                 $parking->userid = $emailget;
@@ -68,7 +75,7 @@ class parkingApi extends Controller
                 $parking->haus = $haus;
                 $parking->plz = $plz;
                 $parking->ort = $ort;
-                $parking->image = $destinationPath.'/'.$imagename;
+                $parking->image = $pathImage;
                 $parking->save();
             
                 return response()->json(['data' => [
@@ -80,7 +87,7 @@ class parkingApi extends Controller
                 'haus' => $haus,
                 'plz' => $plz,
                 'ort' => $ort,
-                'image' => $image,
+                'image' => $pathImage,
                 'response' => '1'
          ]]);
             } else {
@@ -119,7 +126,6 @@ class parkingApi extends Controller
             // token end
         }
     }
-
     public function view(request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -150,12 +156,10 @@ class parkingApi extends Controller
             // token end
         }
     }
-
-
     public function edit(request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1048',
+            'image' => 'required',
             'xcord' => 'required',
             'ycord' => 'required',
             'parkplatz' => 'required',
@@ -163,7 +167,6 @@ class parkingApi extends Controller
             'haus' => 'required',
             'plz' => 'required',
             'ort' => 'required',
-            'image' => 'required',
             'remember_token' => 'required'
             
         ]);
@@ -179,9 +182,9 @@ class parkingApi extends Controller
        
                 //Parking data check
                 if ($output != null) {
-                    $emailget = $output['email'];
+                    $emailget = $outputUser['email'];
                     if ($request->has('image')) {
-                        $file = $request->file('image');
+                        // $file = $request->file('image');
                         $folder_name = date('Ymd') . '_' . mt_rand(1000, 990000);
                         File::makeDirectory(public_path() . '/parking_images/' . $folder_name, 0777, true);
                         $destinationPath = ('parking_images/' . $folder_name);
@@ -192,9 +195,9 @@ class parkingApi extends Controller
                         . $characters[rand(0, strlen($characters) - 1)];
 
                         $string = str_shuffle($pin);
-                        $imagename = $string . '.' . $file->getClientOriginalExtension();
-                        $thumb_img = Image::make($file->getRealPath());
-                        $thumb_img->save($destinationPath . '/' . $imagename, 100);
+                        // $imagename = $string . '.' . $file->getClientOriginalExtension();
+                        // $thumb_img = Image::make($file->getRealPath());
+                        // $thumb_img->save($destinationPath . '/' . $imagename, 100);
             
                         $xcord = $request->input('xcord');
                         $ycord = $request->input('ycord');
@@ -203,7 +206,16 @@ class parkingApi extends Controller
                         $haus = $request->input('haus');
                         $plz = $request->input('plz');
                         $ort = $request->input('ort');
-                        $image = $destinationPath.'/'.$imagename;
+                        // $image = $destinationPath.'/'.$imagename;
+
+                        // Base 64 image Operation
+                        $data = $request->input('image');
+                        $data = str_replace('data:image/png;base64,', '', $data);
+                        $data = str_replace(' ', '+', $data);
+                        $string2 = $string .''. str_random(10).'.'.'png';
+                        $pathImage = $destinationPath.'/'. $string2;
+                        File::put(public_path(). '/'.$destinationPath .'/'. $string2, base64_decode($data));
+                        // Base 64 End
            
                         $parking = parking::where(['id' => $id])->first();
                         $parking->userid = $emailget;
@@ -214,7 +226,7 @@ class parkingApi extends Controller
                         $parking->haus = $haus;
                         $parking->plz = $plz;
                         $parking->ort = $ort;
-                        $parking->image = $destinationPath.'/'.$imagename;
+                        $parking->image = $pathImage;
                         $parking->save();
             
                         return response()->json(['data' => [
@@ -226,7 +238,7 @@ class parkingApi extends Controller
                 'haus' => $haus,
                 'plz' => $plz,
                 'ort' => $ort,
-                'image' => $image,
+                'image' => $pathImage,
                 'response' => '1'
          ]]);
                     } else {

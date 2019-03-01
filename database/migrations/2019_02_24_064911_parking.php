@@ -24,7 +24,7 @@ class Parking extends Migration
             $table->string('plz')->nullable();
             $table->string('ort')->nullable();
             $table->string('image')->nullable();
-            $table->string('image_enc')->nullable();
+            $table->binary('image_enc')->nullable();
             $table->timestamps();
         });
     }
