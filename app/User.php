@@ -29,6 +29,10 @@ class User extends Authenticatable
         'plz',
         'ort',
         'telefon',
+        'account_holder',
+        'iban',
+        'signature',
+        'agree',
         'remember_token'
     ];
 

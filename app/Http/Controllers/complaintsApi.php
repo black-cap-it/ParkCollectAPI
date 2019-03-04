@@ -152,7 +152,6 @@ class complaintsApi extends Controller
     public function edit(request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'required',
             'xcord' => 'required',
             'ycord' => 'required',
             'zeitpunkt' => 'required',

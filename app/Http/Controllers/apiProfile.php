@@ -8,26 +8,26 @@ use Validator;
 
 class apiProfile extends Controller
 {
-    public function profile(Request $request) {
-
+    public function profile(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'remember_token' => 'required'
             ]);
-            if ($validator->fails()) {
-                return response()->json(['data' => ['remember_token'=>'The remember token field is required']]);
+        if ($validator->fails()) {
+            return response()->json(['data' => ['remember_token'=>'The remember token field is required']]);
+        } else {
+            $token = request('remember_token');
+            $output = User::where(['remember_token' => $token])->first();
+            if ($output != null) {
+                return response()->json(['data' => $output]);
             } else {
-
-                $token = request('remember_token');
-                $output = User::where(['remember_token' => $token])->first();
-                if ($output != null) {
-                    return response()->json(['data' => $output]);
-                } else {
-                    $success['error'] =  'Token not Valid';
-                    return response()->json(['data' => $success]);
-                }
+                $success['error'] =  'Token not Valid';
+                return response()->json(['data' => $success]);
             }
+        }
     }
-    public function profileUpdate(Request $request) {
+    public function profileUpdate(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'remember_token' => 'required'
             ]);
@@ -49,6 +49,25 @@ class apiProfile extends Controller
                 $plz = request('plz');
                 $ort = request('ort');
                 $telefon = request('telefon');
+
+                $account_holder = request('account_holder');
+                $iban = request('iban');
+                $signature = request('signature');
+
+                // Agree check
+                $agree = request('agree');
+
+                $profiledata = User::where(['remember_token' => $token])->first();
+                $agreeValue = $profiledata['agree'];
+
+                if ($agreeValue == 0) {
+                    if ($agree != null) {
+                        $agree2 = request('agree');
+                    } else {
+                        $agree2 = '0';
+                    }
+                }
+                // Agree check
     
     
                 $profile = User::where(['remember_token' => $token])->first();
@@ -62,6 +81,15 @@ class apiProfile extends Controller
                 $profile->plz = $plz;
                 $profile->ort = $ort;
                 $profile->telefon = $telefon;
+
+                $profile->account_holder = $account_holder;
+                $profile->iban = $iban;
+                $profile->signature = $signature;
+                // Agree check
+                if ($agreeValue == 0) {
+                    $profile->agree = $agree2;
+                }
+                // Agree check
                 $profile->save();
     
                 $output = User::where(['remember_token' => $token])->first();
