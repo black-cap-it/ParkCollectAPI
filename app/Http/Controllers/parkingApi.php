@@ -13,14 +13,14 @@ class parkingApi extends Controller
     public function index(request $request)
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'required',
-            'xcord' => 'required',
-            'ycord' => 'required',
-            'parkplatz' => 'required',
-            'strab' => 'required',
-            'haus' => 'required',
-            'plz' => 'required',
-            'ort' => 'required',
+            // 'image' => 'required',
+            // 'xcord' => 'required',
+            // 'ycord' => 'required',
+            // 'parkplatz' => 'required',
+            // 'strab' => 'required',
+            // 'haus' => 'required',
+            // 'plz' => 'required',
+            // 'ort' => 'required',
             'remember_token' => 'required'
         ]);
     
@@ -159,13 +159,13 @@ class parkingApi extends Controller
     public function edit(request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'xcord' => 'required',
-            'ycord' => 'required',
-            'parkplatz' => 'required',
-            'strab' => 'required',
-            'haus' => 'required',
-            'plz' => 'required',
-            'ort' => 'required',
+            // 'xcord' => 'required',
+            // 'ycord' => 'required',
+            // 'parkplatz' => 'required',
+            // 'strab' => 'required',
+            // 'haus' => 'required',
+            // 'plz' => 'required',
+            // 'ort' => 'required',
             'remember_token' => 'required'
             
         ]);

@@ -14,14 +14,11 @@ class complaintsApi extends Controller
     public function index(request $request)
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'required',
-            'xcord' => 'required',
-            'ycord' => 'required',
-            'zeitpunkt' => 'required',
-            'parkplatz' => 'required',
-            'grund' => 'required',
-            'tarif' => 'required',
-            'telefon' => 'required',
+        //     'park_id' => 'required',
+        //    'zeitpunkt' => 'required',
+        //     'grund' => 'required',
+        //     'tarif' => 'required',
+        //     'telefon' => 'required',
             'remember_token' => 'required'
         ]);
     
@@ -49,13 +46,13 @@ class complaintsApi extends Controller
                 // $thumb_img = Image::make($file->getRealPath());
                 // $thumb_img->save($destinationPath . '/' . $imagename, 100);
             
-                $xcord = $request->input('xcord');
-                $ycord = $request->input('ycord');
+             
                 $zeitpunkt = $request->input('zeitpunkt');
-                $parkplatz = $request->input('parkplatz');
+                $park_id = $request->input('park_id');
                 $grund = $request->input('grund');
                 $tarif = $request->input('tarif');
                 $telefon = $request->input('telefon');
+                $status = $request->input('status');
                 // $image = $destinationPath.'/'.$imagename;
 
                 // Base 64 image Operation
@@ -69,26 +66,27 @@ class complaintsApi extends Controller
            
                 $complaints = new complaints;
                 $complaints->userid = $emailget;
-                $complaints->xcord = $xcord;
-                $complaints->ycord = $ycord;
+                $complaints->park_id = $park_id;
                 $complaints->zeitpunkt = $zeitpunkt;
-                $complaints->parkplatz = $parkplatz;
+               
                 $complaints->grund = $grund;
                 $complaints->tarif = $tarif;
                 $complaints->telefon = $telefon;
                 $complaints->image = $pathImage;
+                $complaints->status = $status;
+
+                
                 $complaints->save();
             
                 return response()->json(['data' => [
                 'userid' => $emailget,
-                'xcord' => $xcord ,
-                'ycord' => $ycord,
+                'park_id' => $park_id,
                 'zeitpunkt' => $zeitpunkt,
-                'parkplatz' => $parkplatz,
                 'grund' => $grund,
                 'tarif' => $tarif,
                 'telefon' => $telefon,
                 'image' => $pathImage,
+                'status' => $status,
                 'response' => '1'
          ]]);
             } else {
@@ -152,13 +150,11 @@ class complaintsApi extends Controller
     public function edit(request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'xcord' => 'required',
-            'ycord' => 'required',
-            'zeitpunkt' => 'required',
-            'parkplatz' => 'required',
-            'grund' => 'required',
-            'tarif' => 'required',
-            'telefon' => 'required',
+            // 'park_id' => 'required',
+            // 'zeitpunkt' => 'required',
+            // 'grund' => 'required',
+            // 'tarif' => 'required',
+            // 'telefon' => 'required',
             'remember_token' => 'required'
         ]);
     
@@ -190,13 +186,14 @@ class complaintsApi extends Controller
                         // $thumb_img = Image::make($file->getRealPath());
                         // $thumb_img->save($destinationPath . '/' . $imagename, 100);
             
-                        $xcord = $request->input('xcord');
-                        $ycord = $request->input('ycord');
+                      
                         $zeitpunkt = $request->input('zeitpunkt');
-                        $parkplatz = $request->input('parkplatz');
+                        $park_id = $request->input('park_id');
+                        
                         $grund = $request->input('grund');
                         $tarif = $request->input('tarif');
                         $telefon = $request->input('telefon');
+                        $status = $request->input('status');
                         // $image = $destinationPath.'/'.$imagename;
 
                         // Base 64 image Operation
@@ -210,57 +207,61 @@ class complaintsApi extends Controller
            
                         $complaints = complaints::where(['id' => $id])->first();
                         $complaints->userid = $emailget;
-                        $complaints->xcord = $xcord;
-                        $complaints->ycord = $ycord;
+                        $complaints->park_id = $park_id;
+                      
                         $complaints->zeitpunkt = $zeitpunkt;
-                        $complaints->parkplatz = $parkplatz;
+                       
                         $complaints->grund = $grund;
                         $complaints->tarif = $tarif;
                         $complaints->telefon = $telefon;
                         $complaints->image = $pathImage;
+                        $complaints->status = $status;
+                        
                         $complaints->save();
             
                         return response()->json(['data' => [
                             'userid' => $emailget,
-                'xcord' => $xcord ,
-                'ycord' => $ycord,
+               
                 'zeitpunkt' => $zeitpunkt,
-                'parkplatz' => $parkplatz,
+                'park_id' => $park_id,
+                
                 'grund' => $grund,
                 'tarif' => $tarif,
                 'telefon' => $telefon,
                 'image' => $pathImage,
+                'status' => $status,
                 'response' => '1'
          ]]);
                     } else {
-                        $xcord = $request->input('xcord');
-                        $ycord = $request->input('ycord');
+                      
                         $zeitpunkt = $request->input('zeitpunkt');
-                        $parkplatz = $request->input('parkplatz');
+                        $park_id = $request->input('park_id');
                         $grund = $request->input('grund');
                         $tarif = $request->input('tarif');
                         $telefon = $request->input('telefon');
+                        $status = $request->input('status');
                
                         $complaints = complaints::where(['id' => $id])->first();
                         $complaints->userid = $emailget;
-                        $complaints->xcord = $xcord;
-                        $complaints->ycord = $ycord;
+                        $complaints->park_id = $park_id;
+                      
                         $complaints->zeitpunkt = $zeitpunkt;
-                        $complaints->parkplatz = $parkplatz;
+                       
                         $complaints->grund = $grund;
                         $complaints->tarif = $tarif;
                         $complaints->telefon = $telefon;
+                        $complaints->status = $status;
                         $complaints->save();
             
                         return response()->json(['data' => [
                             'userid' => $emailget,
-                'xcord' => $xcord ,
-                'ycord' => $ycord,
+              
                 'zeitpunkt' => $zeitpunkt,
-                'parkplatz' => $parkplatz,
+                'park_id' => $park_id,
                 'grund' => $grund,
                 'tarif' => $tarif,
                 'telefon' => $telefon,
+                'status' => $status,
                 'response' => '1'
          ]]);
                     }

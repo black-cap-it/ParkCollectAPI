@@ -30,7 +30,10 @@ class CreateUsersTable extends Migration
             $table->string('plz')->nullable();
             $table->string('ort')->nullable();
             $table->string('telefon')->nullable();
-
+            $table->text('account_holder')->nullable();
+            $table->text('iban')->nullable();
+            $table->binary('signature')->nullable();
+            $table->enum('agree', ['0', '1'])->default('0');
             $table->rememberToken();
             $table->timestamps();
         });

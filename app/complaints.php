@@ -11,10 +11,7 @@ class complaints extends Model
     protected $table = 'complaints';
     protected $fillable = [
         'userid',
-        'xcord',
-        'ycord',
         'zeitpunkt',
-        'parkplatz',
         'grund',
         'tarif',
         'telefon',

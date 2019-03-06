@@ -16,14 +16,12 @@ class Complaints extends Migration
         Schema::create('complaints', function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('userid');
-            $table->string('xcord')->nullable();
-            $table->string('ycord')->nullable();
             $table->string('zeitpunkt')->nullable();
-            $table->string('parkplatz')->nullable();
             $table->string('grund')->nullable();
             $table->string('tarif')->nullable();
             $table->string('telefon')->nullable();
             $table->string('image')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
