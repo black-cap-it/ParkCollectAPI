@@ -16,6 +16,7 @@ class complaints extends Model
         'tarif',
         'telefon',
         'image',
-        'image_enc'
+        'image_enc',
+        'status'
     ];
 }

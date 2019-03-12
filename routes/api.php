@@ -24,3 +24,10 @@ Route::post('logout', 'apiLogout@logout');
 Route::post('profile', 'apiProfile@profile');
 // profile update
 Route::post('profile/edit','apiProfile@profileUpdate' );
+//Verify Registration Email
+Route::get('mails/demo_plain', function(){
+    return view('mails/demo_plain');
+});
+Route::get('mails/demo', function(){
+    return view('mails/demo');
+});
