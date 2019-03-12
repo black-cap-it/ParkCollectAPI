@@ -49,6 +49,7 @@ class complaintsApi extends Controller
              
                 $zeitpunkt = $request->input('zeitpunkt');
                 $park_id = $request->input('park_id');
+                $park_platz = $request->input('park_platz');
                 $grund = $request->input('grund');
                 $tarif = $request->input('tarif');
                 $telefon = $request->input('telefon');
@@ -67,6 +68,8 @@ class complaintsApi extends Controller
                 $complaints = new complaints;
                 $complaints->userid = $emailget;
                 $complaints->park_id = $park_id;
+                $complaints->park_platz = $park_platz;
+                
                 $complaints->zeitpunkt = $zeitpunkt;
                
                 $complaints->grund = $grund;
@@ -81,6 +84,7 @@ class complaintsApi extends Controller
                 return response()->json(['data' => [
                 'userid' => $emailget,
                 'park_id' => $park_id,
+                'park_platz' => $park_platz,
                 'zeitpunkt' => $zeitpunkt,
                 'grund' => $grund,
                 'tarif' => $tarif,
@@ -189,6 +193,7 @@ class complaintsApi extends Controller
                       
                         $zeitpunkt = $request->input('zeitpunkt');
                         $park_id = $request->input('park_id');
+                        $park_platz = $request->input('park_platz');
                         
                         $grund = $request->input('grund');
                         $tarif = $request->input('tarif');
@@ -208,6 +213,7 @@ class complaintsApi extends Controller
                         $complaints = complaints::where(['id' => $id])->first();
                         $complaints->userid = $emailget;
                         $complaints->park_id = $park_id;
+                        $complaints->park_platz = $park_platz;
                       
                         $complaints->zeitpunkt = $zeitpunkt;
                        
@@ -224,6 +230,7 @@ class complaintsApi extends Controller
                
                 'zeitpunkt' => $zeitpunkt,
                 'park_id' => $park_id,
+                'park_platz' =>$park_platz,
                 
                 'grund' => $grund,
                 'tarif' => $tarif,
@@ -236,6 +243,7 @@ class complaintsApi extends Controller
                       
                         $zeitpunkt = $request->input('zeitpunkt');
                         $park_id = $request->input('park_id');
+                        $park_platz = $request->input('park_platz');
                         $grund = $request->input('grund');
                         $tarif = $request->input('tarif');
                         $telefon = $request->input('telefon');
@@ -244,6 +252,7 @@ class complaintsApi extends Controller
                         $complaints = complaints::where(['id' => $id])->first();
                         $complaints->userid = $emailget;
                         $complaints->park_id = $park_id;
+                        $complaints->park_platz = $park_platz;
                       
                         $complaints->zeitpunkt = $zeitpunkt;
                        
@@ -258,6 +267,7 @@ class complaintsApi extends Controller
               
                 'zeitpunkt' => $zeitpunkt,
                 'park_id' => $park_id,
+                'park_platz' => $park_platz,
                 'grund' => $grund,
                 'tarif' => $tarif,
                 'telefon' => $telefon,
