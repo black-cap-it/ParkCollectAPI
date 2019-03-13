@@ -21,10 +21,10 @@ class confirmToken extends Controller
             $confirmEmail = User::where(['remember_token' => $token])->first();
             $confirmEmail->status = '1';
             $confirmEmail->save();
-            return view('confirm')->with('message', 'Email Verified');
+            return redirect('http://parkcollect.draft-box.de/response/register-success.html');
           
         } else {
-            return view('confirm')->with('message', 'Token not Valid');
+            return redirect('http://parkcollect.draft-box.de/response/register-fail.html');
         }
         // token end
     }

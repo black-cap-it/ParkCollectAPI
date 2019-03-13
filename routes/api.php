@@ -31,3 +31,8 @@ Route::get('mails/demo_plain', function(){
 Route::get('mails/demo', function(){
     return view('mails/demo');
 });
+// register
+Route::post('reset', 'resetPasswordApi@reset');
+Route::get('mails/reset', function(){
+    return view('mails/reset');
+});

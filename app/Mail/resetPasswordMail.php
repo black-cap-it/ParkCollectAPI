@@ -1,33 +1,27 @@
 <?php
- 
+
 namespace App\Mail;
- 
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
- 
-class regEmail extends Mailable
+
+class resetPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
-     
-    /**
-     * The demo object instance.
-     *
-     * @var Demo
-     */
-    public $demo;
- 
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
+    public $demo;
     public function __construct($demo)
     {
         $this->demo = $demo;
     }
- 
+
     /**
      * Build the message.
      *
@@ -35,8 +29,8 @@ class regEmail extends Mailable
      */
     public function build()
     {
-        return $this->from('send@webentwicklung-aachen.de', 'Confirm Email')
-                    ->subject('Confirm your email address')
-                    ->view('mails.demo');
+        return $this->from('send@webentwicklung-aachen.de', 'Reset Password')
+                    ->subject('Reset your Parking App password')
+                    ->view('mails.reset');
     }
 }
