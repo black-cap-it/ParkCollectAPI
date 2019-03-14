@@ -19,7 +19,10 @@ class registerApi extends Controller
         ]);
     
         if ($validator->fails()) {
-            return response()->json(['data' => $validator->messages()], 200);
+            return response()->json(['data' => [
+                'response' => '0',
+                'message' => 'The email field is required'
+                ]]);
         } else {
             $name = $request->input('name');
             $email = $request->input('email');
@@ -48,7 +51,15 @@ class registerApi extends Controller
 
 
             
-            return response()->json(['data' => ['name' => $name , 'email' => $email, 'remember_token' => $remember_token,'response' => '1' ]]);
+            return response()->json([
+                'data' => 
+                [
+                    'name' => $name ,
+                     'email' => $email,
+                      'remember_token' => $remember_token,
+                      'response' => '1',
+                      'message' => 'Registration Successful',
+             ]]);
         }
     }
 }

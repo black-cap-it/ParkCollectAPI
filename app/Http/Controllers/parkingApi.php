@@ -13,19 +13,14 @@ class parkingApi extends Controller
     public function index(request $request)
     {
         $validator = Validator::make($request->all(), [
-            // 'image' => 'required',
-            // 'xcord' => 'required',
-            // 'ycord' => 'required',
-            // 'parkplatz' => 'required',
-            // 'strab' => 'required',
-            // 'haus' => 'required',
-            // 'plz' => 'required',
-            // 'ort' => 'required',
             'remember_token' => 'required'
         ]);
     
         if ($validator->fails()) {
-            return response()->json(['data' => $validator->messages()], 200);
+            return response()->json(['data' => [
+                'response' => '0',
+                'message' => 'The remember token field is required'
+                ]]);
         } else {
             $token = request('remember_token');
             $output = User::where(['remember_token' => $token])->first();
@@ -88,10 +83,12 @@ class parkingApi extends Controller
                 'plz' => $plz,
                 'ort' => $ort,
                 'image' => $pathImage,
-                'response' => '1'
+                'response' => '1',
+                'message' => 'Success'
          ]]);
             } else {
-                $success['error'] =  'Token not Valid';
+                $success['response'] =  '0';
+                $success['message'] =  'Token not Valid';
                 return response()->json(['data' => $success]);
             }
         }
@@ -103,7 +100,10 @@ class parkingApi extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['data' => $validator->messages()], 200);
+            return response()->json(['data' => [
+                'response' => '0',
+                'message' => 'The remember token field is required'
+                ]]);
         } else {
             $token = request('remember_token');
             $outputUser = User::where(['remember_token' => $token])->first();
@@ -114,13 +114,18 @@ class parkingApi extends Controller
        
                 //Parking data check
                 if ($output != null) {
-                    return response()->json(['data' => $output]);
+                    $response['response'] =  '1';
+                    $response['message'] =  'Success';
+                    return response()->json(['data' => $output,'response' => $response]);
                 } else {
-                    return response()->json(['data' => ['error'=>'Data not found']]);
+                    $success['response'] =  '0';
+                    $success['message'] =  'Data not found';
+                    return response()->json(['data' => $success]);
                 }
                 // parking end
             } else {
-                $success['error'] =  'Token not Valid';
+                $success['response'] =  '0';
+                $success['message'] =  'Token not Valid';
                 return response()->json(['data' => $success]);
             }
             // token end
@@ -133,7 +138,10 @@ class parkingApi extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['data' => $validator->messages()], 200);
+            return response()->json(['data' => [
+                'response' => '0',
+                'message' => 'The remember token field is required'
+                ]]);
         } else {
             $token = request('remember_token');
             $outputUser = User::where(['remember_token' => $token])->first();
@@ -144,13 +152,18 @@ class parkingApi extends Controller
        
                 //Parking data check
                 if ($output != null) {
+                    $output['response'] =  '1';
+                    $output['message'] =  'Success';
                     return response()->json(['data' => $output]);
                 } else {
-                    return response()->json(['data' => ['error'=>'Data not found']]);
+                    $success['response'] =  '0';
+                    $success['message'] =  'Data not found';
+                    return response()->json(['data' => $success]);
                 }
                 // parking end
             } else {
-                $success['error'] =  'Token not Valid';
+                $success['response'] =  '0';
+                $success['message'] =  'Token not Valid';
                 return response()->json(['data' => $success]);
             }
             // token end
@@ -159,19 +172,15 @@ class parkingApi extends Controller
     public function edit(request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            // 'xcord' => 'required',
-            // 'ycord' => 'required',
-            // 'parkplatz' => 'required',
-            // 'strab' => 'required',
-            // 'haus' => 'required',
-            // 'plz' => 'required',
-            // 'ort' => 'required',
             'remember_token' => 'required'
             
         ]);
     
         if ($validator->fails()) {
-            return response()->json(['data' => $validator->messages()], 200);
+            return response()->json(['data' => [
+                'response' => '0',
+                'message' => 'The remember token field is required'
+                ]]);
         } else {
             $token = request('remember_token');
             $outputUser = User::where(['remember_token' => $token])->first();
@@ -229,7 +238,7 @@ class parkingApi extends Controller
                         $parking->save();
             
                         return response()->json(['data' => [
-                            'userid' => $emailget,
+                'userid' => $emailget,
                 'xcord' => $xcord ,
                 'ycord' => $ycord,
                 'parkplatz' => $parkplatz,
@@ -238,7 +247,8 @@ class parkingApi extends Controller
                 'plz' => $plz,
                 'ort' => $ort,
                 'image' => $pathImage,
-                'response' => '1'
+                'response' => '1',
+                'message' => 'Success'
          ]]);
                     } else {
                         $xcord = $request->input('xcord');
@@ -270,15 +280,19 @@ class parkingApi extends Controller
                 'haus' => $haus,
                 'plz' => $plz,
                 'ort' => $ort,
-                'response' => '1'
+                'response' => '1',
+                'message' => 'Success'
          ]]);
                     }
                 } else {
-                    return response()->json(['data' => ['error'=>'Data not found']]);
+                    $success['response'] =  '0';
+                    $success['message'] =  'Data not found';
+                    return response()->json(['data' => $success]);
                 }
                 // parking end
             } else {
-                $success['error'] =  'Token not Valid';
+                $success['response'] =  '0';
+                $success['message'] =  'Token not Valid';
                 return response()->json(['data' => $success]);
             }
             // token end
@@ -292,7 +306,10 @@ class parkingApi extends Controller
             ]);
     
         if ($validator->fails()) {
-            return response()->json(['data' => $validator->messages()], 200);
+            return response()->json(['data' => [
+                'response' => '0',
+                'message' => 'The remember token field is required'
+                ]]);
         } else {
             $token = request('remember_token');
             $outputUser = User::where(['remember_token' => $token])->first();
@@ -303,13 +320,20 @@ class parkingApi extends Controller
 
                 if ($output != null) {
                     $output->delete();
-                    return response()->json(['data' => ['responce'=>'Data Deleted Successfully']]);
+                    return response()->json(['data' => [
+                        'response' => '1',
+                        'message'=>'Data Deleted Successfully'
+                       ]]);
                 } else {
-                    return response()->json(['data' => ['error'=>'Data not Found']]);
+                    return response()->json(['data' => [
+                        'response' => '0',
+                        'message'=>'Data not found'
+                        ]]);
                 }
                 // parking end
             } else {
-                $success['error'] =  'Token not Valid';
+                $success['response'] =  '0';
+                $success['message'] =  'Token not Valid';
                 return response()->json(['data' => $success]);
             }
             // token end

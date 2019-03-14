@@ -14,14 +14,20 @@ class apiProfile extends Controller
             'remember_token' => 'required'
             ]);
         if ($validator->fails()) {
-            return response()->json(['data' => ['remember_token'=>'The remember token field is required']]);
+            return response()->json(['data' => [
+                'response' => '0',
+                'message' => 'The remember token field is required'
+                ]]);
         } else {
             $token = request('remember_token');
             $output = User::where(['remember_token' => $token])->first();
             if ($output != null) {
+                $output['response'] =  '1';
+                $output['message'] =  'Success';
                 return response()->json(['data' => $output]);
             } else {
-                $success['error'] =  'Token not Valid';
+                $success['response'] =  '0';
+                $success['message'] =  'Data not found';
                 return response()->json(['data' => $success]);
             }
         }
@@ -33,7 +39,10 @@ class apiProfile extends Controller
             ]);
 
         if ($validator->fails()) {
-            return response()->json(['data' => ['remember_token'=>'The remember token field is required']]);
+            return response()->json(['data' => [
+                'response' => '0',
+                'message' => 'The remember token field is required'
+                ]]);
         } else {
             $token = request('remember_token');
     
@@ -93,9 +102,12 @@ class apiProfile extends Controller
                 $profile->save();
     
                 $output = User::where(['remember_token' => $token])->first();
+                $output['response'] =  '1';
+                $output['message'] =  'Profile updated';
                 return response()->json(['data' => $output]);
             } else {
-                $success['error'] =  'Token not Valid';
+                $success['response'] =  '0';
+                $success['message'] =  'Token not Valid';
                 return response()->json(['data' => $success]);
             }
         }

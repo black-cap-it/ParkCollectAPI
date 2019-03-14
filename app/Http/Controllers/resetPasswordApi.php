@@ -18,7 +18,10 @@ class resetPasswordApi extends Controller
         ]);
     
         if ($validator->fails()) {
-            return response()->json(['data' => $validator->messages()], 200);
+            return response()->json(['data' => [
+                'response' => '0',
+                'message' => 'The email field is required'
+                ]]);
         } else {
             $email = $request->input('email');
             $password = $request->input('password');
@@ -39,7 +42,9 @@ class resetPasswordApi extends Controller
             return response()->json(['data' => [
                 'email' => $email,
                 'remember_token' => $remember_token_j,
-                'response' => '1' ]]);
+                'response' => '1',
+                'message' => 'Successful'
+                 ]]);
         }
     }
     public function resetlink($token, $password)

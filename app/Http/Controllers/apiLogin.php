@@ -23,17 +23,22 @@ class apiLogin extends Controller
                 $Token->remember_token = $tokenGenerate;
                 $Token->save();
                 $success['remember_token'] =  $tokenGenerate;
-                return response()->json(['data' => $success]);
+                $success['response'] =  '1';
+                $success['message'] =  'Login Successful';
+
+                return response()->json([
+                    'data' => $success,
+                    ]);
             } else {
                 return response()->json(['data' => [
-                    'error' => 'Account not verified yet',
-                    'status' => $status_j
+                    'response' => '0',
+                    'message' => 'Account not verified yet'
                 ]]);
             }
         }
         return response()->json(['data' => [
-            'error' => 'Unauthenticated User',
-            'code' => 401,
-        ]], 401);
+            'response' => '0',
+            'message' => 'Unauthenticated User'
+        ]]);
     }
 }
