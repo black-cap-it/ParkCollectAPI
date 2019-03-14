@@ -21,7 +21,7 @@ class registerApi extends Controller
         if ($validator->fails()) {
             return response()->json(['data' => [
                 'response' => '0',
-                'message' => 'The email field is required'
+                'message' => 'The email field is required OR already registered!'
                 ]]);
         } else {
             $name = $request->input('name');

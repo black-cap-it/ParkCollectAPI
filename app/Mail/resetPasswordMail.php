@@ -29,8 +29,8 @@ class resetPasswordMail extends Mailable
      */
     public function build()
     {
-        return $this->from('send@webentwicklung-aachen.de', 'Reset Password')
-                    ->subject('Reset your Parking App password')
+        return $this->from('send@webentwicklung-aachen.de', 'Passwort zurücksetzen')
+                    ->subject('Setzen Sie Ihr Parking App-Passwort zurück')
                     ->view('mails.reset');
     }
 }

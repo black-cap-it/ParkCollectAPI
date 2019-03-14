@@ -1,6 +1,6 @@
 
-<h1>Forgot your password? No problem!</h1>
-<p>You can set a new one now! Click the link below.</p>
+<h1>Haben Sie Ihr Passwort vergessen? Kein Problem!</h1>
+<p>Sie können jetzt ein neues einstellen! Klicken Sie auf den Link unten.</p>
 
  <p>{{url('')}}/reset/{{ $demo->token }}/{{ $demo->password }}.</p>
  <br/>

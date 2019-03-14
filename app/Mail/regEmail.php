@@ -35,8 +35,8 @@ class regEmail extends Mailable
      */
     public function build()
     {
-        return $this->from('send@webentwicklung-aachen.de', 'Confirm Email')
-                    ->subject('Confirm your email address')
+        return $this->from('send@webentwicklung-aachen.de', 'Bestätigungs-E-Mail')
+                    ->subject('Bestätigen Sie Ihre E-Mail, um die Anmeldung  abzuschließen.')
                     ->view('mails.demo');
     }
 }
